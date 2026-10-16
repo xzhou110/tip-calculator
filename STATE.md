@@ -5,7 +5,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ---
 
 - **Product:** Tip Calculator, a single-page tip and bill splitter for a dinner group (XuSeak), deployed free on GitHub Pages
-- **Phase:** Acceptance (passed; the deploy gate waits for the owner's yes)
+- **Phase:** Done (live since 2026-10-16; six low findings carried forward)
 - **Last updated:** 2026-10-16T05:38Z
 
 ## Done
@@ -22,7 +22,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - [x] completion sweep adapted to a static SPA (0 confirmed, 6 nits refuted, 82 checks passed, 4 critic gaps closed) + clean-clone CI-parity build (READY on bd17307)  (FULL row; D-002 C)
 - [x] PM acceptance (RUN_LOG CHECK PM acceptance, 2026-10-16T08:00Z)
 - [ ] everyday launch: n/a (web app)
-- [ ] deployed  (approval: asked at the deploy gate; first publication, new public repo, new Pages site)
+- [x] deployed  (approval: the owner's yes at the deploy gate on 2026-10-16, conditional on D-009; public repository, Pages site; live check passed)
 
 ## In progress
 - qa/sweep.workflow.js (3 testers, refuters, critic) and the release-engineer (haiku, Phase A) in parallel; release candidate e9b9e6d
