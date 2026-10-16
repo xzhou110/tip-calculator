@@ -60,7 +60,7 @@ export function peopleMessage(p: PeopleParse): FieldMessage {
     case 'notWhole':
       return error('Enter a whole number, 1 or more');
     case 'tooLarge':
-      return error('Enter a smaller number of people');
+      return error('Enter a smaller number of people, up to 15 digits');
   }
 }
 

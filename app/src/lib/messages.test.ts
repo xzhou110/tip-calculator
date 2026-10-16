@@ -51,7 +51,7 @@ describe('field messages', () => {
     ['0', 'error', 'Enter a whole number, 1 or more'],
     ['2.5', 'error', 'Enter a whole number, 1 or more'],
     ['two', 'error', 'Enter a whole number, 1 or more'],
-    ['1000000000000000', 'error', 'Enter a smaller number of people'],
+    ['1000000000000000', 'error', 'Enter a smaller number of people, up to 15 digits'],
   ])('People %j: %s %j', (raw, tone, text) => {
     expect(peopleMessage(parsePeople(raw))).toEqual({ tone, text });
   });

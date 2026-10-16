@@ -1,5 +1,16 @@
-// Test data only (imported by *.test.ts, never by the app): api-contract.md § Golden Cases, Split table.
+// Test data only (imported by *.test.ts, never by the app): api-contract.md § Golden Cases, the Split
+// table and the Parse table's comma rows (amended 2026-10-16, R-5).
 import type { FieldTexts, SplitKind } from '../types';
+
+/** parseBill with commas: thousands groups of exactly three digits are valid (value in cents). */
+export const GOLDEN_BILL_GROUPED: readonly (readonly [string, number])[] = [
+  ['$1,234.56', 123456],
+  ['1,000.5', 100050],
+  ['$12,345,678.90', 1234567890],
+];
+
+/** parseBill with a comma that is not a thousands group: invalid malformed, never a 100x bill. */
+export const GOLDEN_BILL_BAD_COMMAS: readonly string[] = ['86,40', '1,00', '12,345,67', ',5', '1,,000', '1234,567'];
 
 export interface GoldenSplit {
   readonly fields: FieldTexts;

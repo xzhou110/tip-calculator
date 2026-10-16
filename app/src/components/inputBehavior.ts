@@ -40,8 +40,9 @@ export function blurOnEnter(event: KeyboardEvent<HTMLInputElement>): boolean {
   return true;
 }
 
-/** ArrowUp is +1 and ArrowDown is -1; any other key is null. */
+/** ArrowUp is +1 and ArrowDown is -1; any other key is null, and so is any key mid IME composition. */
 export function arrowStep(event: KeyboardEvent<HTMLInputElement>): 1 | -1 | null {
+  if (event.nativeEvent.isComposing) return null;
   if (event.key === 'ArrowUp') return 1;
   if (event.key === 'ArrowDown') return -1;
   return null;

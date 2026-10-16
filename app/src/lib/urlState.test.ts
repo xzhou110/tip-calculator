@@ -27,6 +27,9 @@ describe('parseHash', () => {
     ['#bill=0', { bill: '0', tip: '20', people: '2' }],
     ['#tip=18', { bill: '', tip: '18', people: '2' }],
     ['#bill=%24100&x=1', { bill: '100', tip: '20', people: '2' }],
+    ['#bill=86+40&people=4', { bill: '', tip: '20', people: '4' }],
+    ['#tip=+5&people=4', { bill: '', tip: '20', people: '4' }],
+    ['#bill=86%2040&tip=%095', DEFAULTS],
     ['#bill=1e3&bill=50', DEFAULTS],
     ['#%E0%A4%A', DEFAULTS],
     ['#people=&tip=', DEFAULTS],
@@ -41,6 +44,13 @@ describe('parseHash', () => {
     for (const hash of ['#%', '#%%', '#&&&=', '#=', '#bill', '#\ud800', '#bill=\u0000', `#${'a'.repeat(5000)}`]) {
       expect(() => parseHash(hash)).not.toThrow();
     }
+  });
+
+  it('reads a crafted link with a long digit run in linear time (R-1)', () => {
+    const long = `${'1'.repeat(100000)}x`;
+    const started = performance.now();
+    expect(parseHash(`#bill=${long}&tip=${long}&people=4`)).toEqual({ bill: '', tip: '20', people: '4' });
+    expect(performance.now() - started).toBeLessThan(50);
   });
 
   it('returns a fresh object each time (callers may hold it as state)', () => {

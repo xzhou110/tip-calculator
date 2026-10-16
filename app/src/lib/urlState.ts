@@ -23,21 +23,21 @@ function canonical(name: FieldName, raw: string): string | null {
   }
 }
 
-/** Reads "#bill=86.40&tip=20&people=4"; each missing, empty or invalid field falls back to its default. Never throws. */
+/** Whitespace in a decoded value (a literal "+" decodes to a space) makes it invalid (R-4): "86+40" is never 8640. */
+const WHITESPACE = /\s/;
+
+/**
+ * Reads "#bill=86.40&tip=20&people=4"; each missing, empty or invalid field falls back to its default.
+ * Never throws: URLSearchParams leaves a malformed percent-escape as text instead of throwing.
+ */
 export function parseHash(hash: string): FieldTexts {
-  let params: URLSearchParams | null = null;
-  try {
-    const text = String(hash);
-    params = new URLSearchParams(text.startsWith('#') ? text.slice(1) : text);
-  } catch {
-    params = null;
-  }
+  const text = String(hash);
+  const params = new URLSearchParams(text.startsWith('#') ? text.slice(1) : text);
   const out: FieldTexts = { ...DEFAULT_FIELDS };
-  if (params === null) return out;
   for (const name of FIELD_ORDER) {
     const value = params.get(name); // the first value of a repeated key wins
-    const text = value === null ? null : canonical(name, value);
-    if (text !== null) out[name] = text;
+    const canonicalText = value === null || WHITESPACE.test(value) ? null : canonical(name, value);
+    if (canonicalText !== null) out[name] = canonicalText;
   }
   return out;
 }

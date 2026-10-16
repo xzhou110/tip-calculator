@@ -11,7 +11,7 @@ import {
   stepPeople,
   stepTip,
 } from './calc';
-import { GOLDEN_SPLITS } from './goldenCases.testdata';
+import { GOLDEN_BILL_BAD_COMMAS, GOLDEN_BILL_GROUPED, GOLDEN_SPLITS } from './goldenCases.testdata';
 
 describe('parseBill', () => {
   it.each(['', '  ', '$', '.', '$.'])('%j is empty', (raw) => {
@@ -50,6 +50,29 @@ describe('parseBill', () => {
 
   it.each(['86.405', '86.400'])('%j has too many decimals', (raw) => {
     expect(parseBill(raw)).toEqual({ status: 'invalid', problem: 'tooManyDecimals' });
+  });
+
+  it.each(GOLDEN_BILL_GROUPED)('%j (thousands groups) is valid %i', (raw, value) => {
+    expect(parseBill(raw)).toEqual({ status: 'valid', value });
+  });
+
+  it.each(GOLDEN_BILL_BAD_COMMAS)('%j (a comma that is not a thousands group) is malformed', (raw) => {
+    expect(parseBill(raw)).toEqual({ status: 'invalid', problem: 'malformed' });
+  });
+});
+
+describe('the NUMBER pattern stays linear (R-1)', () => {
+  // The old form backtracked quadratically on a long digit run followed by a non-matching character.
+  const long = `${'1'.repeat(100000)}x`;
+  it.each([
+    ['parseBill', () => parseBill(long), 'malformed'],
+    ['parseBill, negative branch', () => parseBill(`-${long}`), 'malformed'],
+    ['parseTip', () => parseTip(long), 'malformed'],
+  ] as const)('%s of 100,000 digits and an "x" is %s in under 50 ms', (_label, run, problem) => {
+    const started = performance.now();
+    const result = run();
+    expect(performance.now() - started).toBeLessThan(50);
+    expect(result).toEqual({ status: 'invalid', problem });
   });
 });
 

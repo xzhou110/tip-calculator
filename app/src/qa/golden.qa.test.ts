@@ -248,7 +248,7 @@ describe('Evaluate incomplete table and messages', () => {
   // Expected-failure marker: documents a FINDING. If the copy is ever fixed this test starts "failing" and must be flipped.
   it('AC4 (fixed 2026-10-16, flipped by the orchestrator): the over-15-digit refusal states its technical reason (PRD: "a technical limit with its reason")', () => {
     const msg = fieldMessages(evaluate({ bill: '5', tip: '20', people: '1000000000000000' }).parsed).people;
-    // Observed text is "Enter a smaller number of people": it names no reason (precision / exactness / digits).
+    // Fixed 2026-10-16 (D-007): the text now reads "Enter a smaller number of people, up to 15 digits"; before the fix it named no reason.
     expect(msg.text).toMatch(/exact|precision|digit|accurate|reliabl|too many/i);
   });
 });

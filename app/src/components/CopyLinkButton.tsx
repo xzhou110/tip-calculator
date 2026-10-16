@@ -32,12 +32,12 @@ export function CopyLinkButton({ getUrl, announce }: CopyLinkButtonProps) {
   const [state, setState] = useState<CopyState>('idle');
   const revertTimer = useRef<number | null>(null);
 
-  useEffect(
-    () => () => {
-      if (revertTimer.current !== null) window.clearTimeout(revertTimer.current);
-    },
-    [],
-  );
+  function clearRevertTimer(): void {
+    if (revertTimer.current !== null) window.clearTimeout(revertTimer.current);
+    revertTimer.current = null;
+  }
+
+  useEffect(() => clearRevertTimer, []);
 
   async function copy(): Promise<void> {
     const url = getUrl();
@@ -46,13 +46,15 @@ export function CopyLinkButton({ getUrl, announce }: CopyLinkButtonProps) {
       if (!clipboard || typeof clipboard.writeText !== 'function') throw new Error('Clipboard unavailable');
       await clipboard.writeText(url);
     } catch {
+      // An earlier success's timer must not swap the failure line back to the helper (R-3).
+      clearRevertTimer();
       setState('failed');
       announce(CLIPBOARD_FAILED_MESSAGE);
       return;
     }
     setState('copied');
     announce(LINK_COPIED_ANNOUNCEMENT);
-    if (revertTimer.current !== null) window.clearTimeout(revertTimer.current);
+    clearRevertTimer();
     revertTimer.current = window.setTimeout(() => {
       revertTimer.current = null;
       setState('idle');

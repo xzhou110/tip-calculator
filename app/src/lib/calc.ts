@@ -14,8 +14,13 @@ import type {
 } from '../types';
 import { formatPercentText } from './format';
 
-/** ASCII digits with an optional decimal point: "86", "86.", "86.40", ".5"; never ".", "", "1e3", "+5". */
-const NUMBER = /^(?:[0-9]+\.?[0-9]*|\.[0-9]+)$/;
+/**
+ * ASCII digits with an optional decimal point: "86", "86.", "86.40", ".5"; never ".", "", "1e3", "+5".
+ * The linear form (R-1): the point is not optional between two digit runs, so nothing backtracks.
+ */
+const NUMBER = /^(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)$/;
+/** A Bill written with commas: thousands groups of exactly three digits, then an optional decimal part (R-5). */
+const GROUPED = /^[0-9]{1,3}(?:,[0-9]{3})+(?:\.[0-9]*)?$/;
 const DIGITS = /^[0-9]+$/;
 const WHITESPACE = /\s/g;
 
@@ -40,9 +45,14 @@ function isNumberOrBare(r: string): boolean {
   return r === '' || r === '.' || NUMBER.test(r);
 }
 
+// String(raw) is kept on purpose in all three parsers: an untyped caller must get a parse, never a throw.
 export function parseBill(raw: string): BillParse {
-  let s = String(raw).replace(WHITESPACE, '').replace(/,/g, '');
+  let s = String(raw).replace(WHITESPACE, '');
   if (s.startsWith('$')) s = s.slice(1);
+  if (s.includes(',')) {
+    if (!GROUPED.test(s)) return { status: 'invalid', problem: 'malformed' };
+    s = s.replace(/,/g, '');
+  }
   if (s === '' || s === '.') return { status: 'empty' };
   if (s.startsWith('-')) {
     let r = s.slice(1);
