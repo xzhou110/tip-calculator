@@ -5,7 +5,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ---
 
 - **Product:** Tip Calculator, a single-page tip and bill splitter for a dinner group (XuSeak), deployed free on GitHub Pages
-- **Phase:** Completion gate (the adapted full sweep and the release engineer's clean-clone build, in parallel)
+- **Phase:** Acceptance (passed; the deploy gate waits for the owner's yes)
 - **Last updated:** 2026-10-16T05:38Z
 
 ## Done
@@ -19,8 +19,8 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - [x] integration checkpoint passed (commit 2d661a0; browser pass in RUN_LOG)
 - [x] test-report.md  (FULL row; 10 of 12 pass, 4 fixed in the fix round, 7 and 8 verified by the orchestrator)
 - [x] review-findings.md  (FULL row; verdict: ship-with-fixes; 14 findings, 9 fixed in the fix round, 6 carried forward; no must-fix)
-- [ ] completion sweep adapted to a static SPA + clean-clone CI-parity build  (FULL row; D-002 C)
-- [ ] PM acceptance
+- [x] completion sweep adapted to a static SPA (0 confirmed, 6 nits refuted, 82 checks passed, 4 critic gaps closed) + clean-clone CI-parity build (READY on bd17307)  (FULL row; D-002 C)
+- [x] PM acceptance (RUN_LOG CHECK PM acceptance, 2026-10-16T08:00Z)
 - [ ] everyday launch: n/a (web app)
 - [ ] deployed  (approval: asked at the deploy gate; first publication, new public repo, new Pages site)
 
@@ -48,11 +48,13 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ## Resume
 - **quota readout at Step 0:** 5-hour 12% · weekly all models 31% · weekly Fable 60% · context 118k (2026-10-16T00:33Z)
 - **quota readout before fan-out:** 5-hour 2% (window reset) · weekly all models 32% · weekly Fable 62% · context 226k (2026-10-16T05:38Z)
+- **quota readout before the deploy gate:** 5-hour 16% · weekly all models 35% · weekly Fable 66% · context 603k (2026-10-16T08:01Z)
 - **scaffold SHA:** 51c789d9523e5f4f043b1e8510f9ce59063543a1 (the lane-diff baseline and the rollback point)
+- **release candidate:** bd173070eb0f18413ea6920cda7d6bb06295dfae (after D-008)
 - **workflow runs:** plan.workflow.js · wf_75859edd-2e0 · briefs/plan.args.json · completed 48.1 min, both artifacts written, checks ok:false on wording, PM resolved (D-006)
 - **workflow runs:** build-verify.workflow.js · wf_4bde4caf-14b · briefs/build-verify.args.json · running (started 2026-10-16T06:37Z)
 - **workflow runs:** build-verify.workflow.js (fix round) · wf_0cc3835a-eb8 · briefs/build-verify-fix.args.json · completed 6.3 min, all nine fixes landed, audit passes
-- **workflow runs:** qa/sweep.workflow.js · wf_58536bc1-dfe · qa/sweep.args.json · running
+- **workflow runs:** qa/sweep.workflow.js · wf_58536bc1-dfe · qa/sweep.args.json · completed 25.4 min, 16 agents, 0 confirmed
 
 ## Next
 - when plan.workflow.js returns: read tech-plan.md (Shared foundation to scaffold, lanes, High-risk surfaces, Spike result) and api-contract.md; freeze the contract; scaffold; install; commit the scaffold; record its SHA; write briefs/frontend-engineer.md (and a second lane brief only if named), briefs/qa-tester.md, briefs/reviewer.md; run build-verify.workflow.js
