@@ -1,0 +1,3 @@
+/* Frontend lane: replace with design-doc.md's Design Tokens block and the page styles. */
+:root { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tip Calculator</title>
+    <meta name="build-commit" content="__BUILD_COMMIT__" />
+    <meta name="description" content="Split a dinner bill with the tip, to the cent. Enter the bill, pick a tip, set the people." />
+    <meta name="theme-color" content="#f4f5f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16181c" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2324776a'/%3E%3Cpath d='M20 46L44 18' stroke='white' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='22' r='6' fill='white'/%3E%3Ccircle cx='42' cy='42' r='6' fill='white'/%3E%3C/svg%3E" />
+    <!-- No-flash theme: runs before the stylesheet and the bundle. The key must equal
+         THEME_STORAGE_KEY in src/constants.ts (src/contract.test.ts guards the pair). -->
+    <script>
+      (function () {
+        var t = null;
+        try {
+          t = window.localStorage.getItem('tip-calculator.theme.v1');
+        } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
