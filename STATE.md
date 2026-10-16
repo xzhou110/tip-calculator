@@ -5,16 +5,16 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ---
 
 - **Product:** Tip Calculator, a single-page tip and bill splitter for a dinner group (XuSeak), deployed free on GitHub Pages
-- **Phase:** Design (plan.workflow.js running: designer, then tech lead)
+- **Phase:** Build (build-verify.workflow.js: frontend lane, audit, QA and review)
 - **Last updated:** 2026-10-16T05:38Z
 
 ## Done
 - [x] project home registered (PROJECT.md · AGENTS.md row · x-command-center projectDirectories, committed there)
 - [x] research-brief.md: skipped (D-002 A)
 - [x] PRD.md (12 criteria; the owner's go in D-002)
-- [ ] design-doc.md (running)
-- [ ] tech-plan.md + api-contract.md  (contract frozen? no)
-- [ ] scaffold committed  (SHA: )
+- [x] design-doc.md (revision 3)
+- [x] tech-plan.md + api-contract.md  (contract frozen? yes, 2026-10-16T06:36Z)
+- [x] scaffold committed  (SHA: 51c789d9523e5f4f043b1e8510f9ce59063543a1)
 - [ ] frontend lane
 - [ ] integration checkpoint passed
 - [ ] test-report.md  (FULL row)
@@ -25,7 +25,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - [ ] deployed  (approval: asked at the deploy gate; first publication, new public repo, new Pages site)
 
 ## In progress
-- plan.workflow.js: designer (opus) → design-doc.md, then tech-lead (opus) → tech-plan.md and api-contract.md
+- build-verify.workflow.js: frontend-engineer (opus) → the lane; then the sonnet auditor; then qa-tester (sonnet) and reviewer (opus) with sonnet refuters
 
 ## Blocked / open questions
 - none now; the deploy gate needs the owner's own yes later
@@ -43,8 +43,9 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ## Resume
 - **quota readout at Step 0:** 5-hour 12% · weekly all models 31% · weekly Fable 60% · context 118k (2026-10-16T00:33Z)
 - **quota readout before fan-out:** 5-hour 2% (window reset) · weekly all models 32% · weekly Fable 62% · context 226k (2026-10-16T05:38Z)
-- **scaffold SHA:** none yet
-- **workflow runs:** plan.workflow.js · wf_75859edd-2e0 · briefs/plan.args.json · running (started 2026-10-16T05:38Z)
+- **scaffold SHA:** 51c789d9523e5f4f043b1e8510f9ce59063543a1 (the lane-diff baseline and the rollback point)
+- **workflow runs:** plan.workflow.js · wf_75859edd-2e0 · briefs/plan.args.json · completed 48.1 min, both artifacts written, checks ok:false on wording, PM resolved (D-006)
+- **workflow runs:** build-verify.workflow.js · wf_4bde4caf-14b · briefs/build-verify.args.json · running (started 2026-10-16T06:37Z)
 
 ## Next
 - when plan.workflow.js returns: read tech-plan.md (Shared foundation to scaffold, lanes, High-risk surfaces, Spike result) and api-contract.md; freeze the contract; scaffold; install; commit the scaffold; record its SHA; write briefs/frontend-engineer.md (and a second lane brief only if named), briefs/qa-tester.md, briefs/reviewer.md; run build-verify.workflow.js
