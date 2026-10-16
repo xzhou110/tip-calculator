@@ -74,3 +74,12 @@ ADR-style record of every non-obvious decision: scope cuts, stack choices, trade
 - **decided by:** orchestrator
 - **reversible:** yes
 - **date:** 2026-10-15
+
+## D-007 Fix round after QA and review: what is fixed now, what is carried forward
+- **decision:** one fix lane (frontend-engineer, through build-verify.workflow.js with QA and review off) lands: R-1 (NUMBER regex in its linear form, with a timing test), R-2 (the dead "Link Copied" hover override, so the green label never sits on --track below AA), R-3 (a failed copy clears the earlier revert timer), R-4 (a hash value containing whitespace, including a decoded "+", is invalid and falls back), R-5 (a comma in Bill must form thousands groups, otherwise malformed, so "86,40" is never $8,640.00), R-8 (the Tip field fits "100.00" at 360px: measured 94px of text in an 85px box), R-10 (ArrowUp and ArrowDown ignored during IME composition), R-13 (unreachable try/catch removed), and QA's AC4 failure (the people limit message now reads "Enter a smaller number of people, up to 15 digits"). Carried forward in STATE.md as open findings, none a must-fix: R-6 (stepping from an invalid value starts from 0 or 1, as the contract says; revisit with real use), R-7 (a 115-character status line at absurd bounds needs a third line), R-9 (aria-live on the helper tone; needs a screen-reader check), R-11 (select-on-focus by tap on iOS; needs an iPhone), R-12 (an announcement race inside 700 ms), R-14 (unit tests for the URL-write path with fakes).
+- **context:** QA passed 10 of 12 criteria (4 failed on the message wording; 7 and 8 are browser items QA cannot test and the orchestrator verified); the Reviewer's verdict was ship-with-fixes with 14 findings, one medium and thirteen low, so no finding reached the refuters
+- **alternatives considered:** the orchestrator making the nine edits itself (cheaper; but the fix round through the script is part of what this run must prove, and the lane owns the code); re-running QA and the reviewer after the fixes (their inputs would be unchanged except for these fixes, so the orchestrator re-runs only the failed checks and the affected browser cases)
+- **rationale:** every fix is small, exact and verified by a test or a measurement; the deferred items are judgement calls or need a device this machine does not have
+- **decided by:** orchestrator
+- **reversible:** yes
+- **date:** 2026-10-16

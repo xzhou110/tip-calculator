@@ -2,7 +2,10 @@
   "projectRoot": "D:/Meaningful/AI/tip-calculator",
   "scaffoldSha": "51c789d9523e5f4f043b1e8510f9ce59063543a1",
   "lanes": [
-    { "role": "frontend-engineer", "brief": "D:/Meaningful/AI/tip-calculator/briefs/frontend-engineer.md" }
+    {
+      "role": "frontend-engineer",
+      "brief": "D:/Meaningful/AI/tip-calculator/briefs/frontend-engineer.md"
+    }
   ],
   "commands": {
     "typecheck": "npm --prefix D:/Meaningful/AI/tip-calculator/app run typecheck",
@@ -10,13 +13,35 @@
     "build": "npm --prefix D:/Meaningful/AI/tip-calculator/app run build"
   },
   "forbidden": [
-    "app/package.json", "app/package-lock.json", "app/tsconfig.json", "app/vite.config.ts", "app/index.html",
-    "app/src/types.ts", "app/src/constants.ts", "app/src/contract.test.ts", "app/scripts/report-bundle-size.mjs",
-    ".github/workflows/deploy.yml", ".gitignore"
+    "app/package.json",
+    "app/package-lock.json",
+    "app/tsconfig.json",
+    "app/vite.config.ts",
+    "app/index.html",
+    "app/src/types.ts",
+    "app/src/constants.ts",
+    "app/src/contract.test.ts",
+    "app/scripts/report-bundle-size.mjs",
+    ".github/workflows/deploy.yml",
+    ".gitignore"
   ],
-  "verification": { "qa": true, "review": true, "refute": true },
+  "verification": {
+    "qa": true,
+    "review": true,
+    "refute": true
+  },
   "briefs": {
     "qa": "D:/Meaningful/AI/tip-calculator/briefs/qa-tester.md",
     "reviewer": "D:/Meaningful/AI/tip-calculator/briefs/reviewer.md"
-  }
+  },
+  "pmOwnedCriteria": [
+    {
+      "id": "8",
+      "owner": "orchestrator: the browser pass (passed, RUN_LOG CHECK integration checkpoint)"
+    },
+    {
+      "id": "11",
+      "owner": "the release step after the deploy gate"
+    }
+  ]
 }

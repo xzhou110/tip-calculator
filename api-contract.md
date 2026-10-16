@@ -176,7 +176,7 @@ export const MAX_PEOPLE = 999999999999999;
 
 All five modules are owned by the frontend lane and live in `app/src/lib/`, each with a Vitest suite beside it (`*.test.ts`). The signatures and rules below are frozen. Private helpers are the engineer's.
 
-`NUMBER` below means the regular expression `/^(?:[0-9]+\.?[0-9]*|\.[0-9]+)$/`: ASCII digits with an optional decimal point. It matches `86`, `86.`, `86.40` and `.5`, and it rejects `.`, `""`, `8.6.4`, `1e3` and `+5`. "Strip leading zeros" turns `007` into `7` and `000` into `""`.
+`NUMBER` below means the regular expression `/^(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)$/` (amended 2026-10-16, R-1: the same language as the earlier `[0-9]+\.?[0-9]*` form, which backtracked quadratically on a long digit run): ASCII digits with an optional decimal point. It matches `86`, `86.`, `86.40` and `.5`, and it rejects `.`, `""`, `8.6.4`, `1e3` and `+5`. "Strip leading zeros" turns `007` into `7` and `000` into `""`.
 
 ### `lib/calc.ts` (the pure calculation module of AC10)
 
@@ -193,7 +193,7 @@ export function pressedPick(tip: TipParse): BasisPoints | null;
 
 **`parseBill(raw)`.** The checks run in this order, and the first match wins:
 
-1. `s` = `raw` with every whitespace character and every `,` removed. If `s` starts with `$`, drop that one `$`.
+1. `s` = `raw` with every whitespace character removed. If `s` starts with `$`, drop that one `$`. If `s` contains `,`, it must match `/^[0-9]{1,3}(?:,[0-9]{3})+(?:\.[0-9]*)?$/` (thousands groups of exactly three digits), otherwise → invalid `malformed`; then remove the commas. (Amended 2026-10-16, R-5: `86,40` is no longer read as $8,640.00; a comma-decimal entry gets the plain "Enter a number, like 86.40".)
 2. `s` is `""` or `"."` → `{ status: 'empty' }`.
 3. `s` starts with `-` → let `r` be the rest, with one leading `$` dropped. If `r` is `""`, `"."` or matches `NUMBER` → invalid `negative`, otherwise invalid `malformed`.
 4. `s` does not match `NUMBER` → invalid `malformed`.
@@ -351,6 +351,7 @@ function useTheme(): { theme: Theme; choose: (t: Theme) => void };
 **`parseHash(hash)`.**
 
 - It accepts the hash with or without its leading `#` and reads it with `URLSearchParams`. The first value of a repeated key wins and unknown keys are ignored.
+- A decoded value that contains any whitespace (including the space `URLSearchParams` makes from a literal `+`) is invalid and falls back to that field's default, so `#bill=86+40` can never load as $8,640.00 (amended 2026-10-16, R-4). Links built by `serializeHash` never contain whitespace or `+`.
 - **Each field falls back independently:** a missing, empty or invalid value becomes that field's `DEFAULT_FIELDS` value. A valid value becomes its canonical text.
 - It never throws, including on malformed percent-escapes, and no error is shown on load (AC9).
 
@@ -363,6 +364,8 @@ function useTheme(): { theme: Theme; choose: (t: Theme) => void };
 | `'#bill=0'` | `{ bill: '0', tip: '20', people: '2' }` |
 | `'#tip=18'` | `{ bill: '', tip: '18', people: '2' }` |
 | `'#bill=%24100&x=1'` | `{ bill: '100', tip: '20', people: '2' }` |
+| `'#bill=86+40&people=4'` | `{ bill: '', tip: '20', people: '4' }` (a decoded space makes the value invalid) |
+| `'#tip=+5&people=4'` | `{ bill: '', tip: '20', people: '4' }` |
 | `'#bill=1e3&bill=50'` | `{ bill: '', tip: '20', people: '2' }` (the first value wins and is invalid) |
 | `'#%E0%A4%A'` | `{ bill: '', tip: '20', people: '2' }` |
 
@@ -405,9 +408,9 @@ No exception ever reaches the UI. User input produces values, not throws (§ Con
 | People | valid | none | `''` |
 | People | empty | prompt | Enter the number of people, like 4 |
 | People | notWhole | error | Enter a whole number, 1 or more |
-| People | tooLarge | error | Enter a smaller number of people |
+| People | tooLarge | error | Enter a smaller number of people, up to 15 digits |
 
-Three of these strings are new: "Enter a bill under $1 billion", "Use up to two decimals, like 17.5" and "Enter a smaller number of people". They cover the exactness bounds and the hundredths precision (tech-plan Key decisions 3 and 13). Every other string is verbatim from design-doc.md § UX Copy.
+Three of these strings are new: "Enter a bill under $1 billion", "Use up to two decimals, like 17.5" and "Enter a smaller number of people, up to 15 digits" (the digits clause added 2026-10-16 so the message names its reason, PRD AC4). They cover the exactness bounds and the hundredths precision (tech-plan Key decisions 3 and 13). Every other string is verbatim from design-doc.md § UX Copy.
 
 ### `StatusLine` (the Line Under the Hero Number; Exactly One Shows)
 
@@ -481,6 +484,8 @@ Placeholders: `{N}` = `formatCount(people)`, `{S}` = `formatMoney(shareCents)`, 
 | parseBill | `'86.'` / `'.5'` / `'$1,234.56'` / `'0'` / `'0.00'` / `'007'` / `'000000000086.40'` | valid 8600 / 50 / 123456 / 0 / 0 / 700 / 8640 |
 | parseBill | `'999999999.99'` / `'1000000000'` | valid 99999999999 / invalid tooLarge |
 | parseBill | `'86.4o'`, `'8.6.4'`, `'abc'`, `'1e3'`, `'+5'`, `'$$5'`, `'-abc'` | invalid malformed |
+| parseBill | `'1,000.5'` / `'$12,345,678.90'` | valid 100050 / 1234567890 (thousands groups) |
+| parseBill | `'86,40'`, `'1,00'`, `'12,345,67'`, `',5'`, `'1,,000'`, `'1234,567'` | invalid malformed (a comma that is not a thousands group; amended 2026-10-16, R-5) |
 | parseBill | `'-5'`, `'-'`, `'-$5'`, `'$-5'`, `'-.'` | invalid negative |
 | parseBill | `'86.405'`, `'86.400'` | invalid tooManyDecimals |
 | parseTip | `''`, `'.'`, `'%'`, `' '` | empty |
@@ -549,4 +554,4 @@ The frozen surface is:
 - the signatures and rules above
 - the storage key and the URL format A lane that needs a change stops and asks the orchestrator. The orchestrator edits this file in place, re-scaffolds the frozen files and updates the line below. Everything not listed as frozen (component structure, hook internals, private helpers, CSS) is the frontend lane's to decide within design-doc.md.
 
-**Last frozen:** 2026-10-16T06:35Z by the orchestrator at the contract-freeze gate (PRD amended first: D-004, D-005; the scaffold commit's SHA is in STATE.md § Resume and RUN_LOG.md)
+**Last frozen:** 2026-10-16T06:35Z by the orchestrator at the contract-freeze gate (PRD amended first: D-004, D-005; the scaffold commit's SHA is in STATE.md § Resume and RUN_LOG.md) · amended 2026-10-16T07:20Z at the fix round (D-007: R-1 regex form, R-4 whitespace in hash values, R-5 comma grouping, the AC4 message); the frozen files are unchanged

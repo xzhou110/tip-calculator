@@ -5,7 +5,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ---
 
 - **Product:** Tip Calculator, a single-page tip and bill splitter for a dinner group (XuSeak), deployed free on GitHub Pages
-- **Phase:** Build (build-verify.workflow.js: frontend lane, audit, QA and review)
+- **Phase:** QA+Review, fix round (one frontend fix lane through build-verify; QA and review done)
 - **Last updated:** 2026-10-16T05:38Z
 
 ## Done
@@ -15,23 +15,28 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - [x] design-doc.md (revision 3)
 - [x] tech-plan.md + api-contract.md  (contract frozen? yes, 2026-10-16T06:36Z)
 - [x] scaffold committed  (SHA: 51c789d9523e5f4f043b1e8510f9ce59063543a1)
-- [ ] frontend lane
-- [ ] integration checkpoint passed
-- [ ] test-report.md  (FULL row)
-- [ ] review-findings.md  (FULL row; verdict: pending)
+- [x] frontend lane (273 tests; hand-back in RUN_LOG)
+- [x] integration checkpoint passed (commit 2d661a0; browser pass in RUN_LOG)
+- [x] test-report.md  (FULL row; 10 of 12 pass, 4 fixed in the fix round, 7 and 8 verified by the orchestrator)
+- [x] review-findings.md  (FULL row; verdict: ship-with-fixes; 14 findings, 9 fixed in the fix round, 6 carried forward; no must-fix)
 - [ ] completion sweep adapted to a static SPA + clean-clone CI-parity build  (FULL row; D-002 C)
 - [ ] PM acceptance
 - [ ] everyday launch: n/a (web app)
 - [ ] deployed  (approval: asked at the deploy gate; first publication, new public repo, new Pages site)
 
 ## In progress
-- build-verify.workflow.js: frontend-engineer (opus) → the lane; then the sonnet auditor; then qa-tester (sonnet) and reviewer (opus) with sonnet refuters
+- build-verify.workflow.js fix round: frontend-engineer (opus) → the nine fixes of D-007; then the sonnet auditor
 
 ## Blocked / open questions
 - none now; the deploy gate needs the owner's own yes later
 
 ## Open findings (carried forward)
-- none
+- R-6 · low · stepping Tip or People from an invalid value starts from 0 or 1 (the contract's rule); clamping to the bound would be kinder; revisit with real use
+- R-7 · low · at absurd bounds the rounded-up status line runs to a third line at 360px (the card grows); accepted as a bounds-only edge
+- R-9 · low · each message slot is aria-live="polite" beside the role="status" region, so the Tip helper may be re-announced; needs an NVDA or VoiceOver check before changing
+- R-11 · low · select-on-focus by tap on iOS Safari is unproven on this machine; check on an iPhone, and if it fails defer the selection with requestAnimationFrame
+- R-12 · low · a field change within 700 ms of Copy Link can replace "Link copied." in the single status region; accepted edge
+- R-14 · low · the URL-write runtime rules (replaceState only, the no-op skip, the swallowed throw) have no automated test; export writeUrl with fakes and test it in node
 
 ## Pending re-runs
 - none
