@@ -109,3 +109,20 @@ Chronological record of orchestration activity; the orchestrator appends, never 
 
 ## [2026-10-16T07:29Z] CHECK re-run of the failed checks after the fix round
 - **what ran:** the preview on 127.0.0.1:4182 reloaded with a cache-busting query (the pane had served the previous bundle index-PGgVRRxv.js from its HTTP cache; the fresh one is index-5j9vns3W.js, matching app/dist) · at 360px Tip "100.00": clientWidth 94 = scrollWidth 94, no clip, the four picks and the field share one row (same top), no horizontal scroll (F-8) · Bill "86,40" → aria-invalid true, "Enter a number, like 86.40", placeholders (F-2) · Bill "1,000.5" at 18% for 3 → $393.53 each, "Splits evenly: 3 × $393.53 = $1,180.59." (F-2) · People 1000000000000000 → "Enter a smaller number of people, up to 15 digits" (F-3) · the generic hover rule now carries :not([data-state="copied"]) and the dead override is gone (F-6) · #bill=86+40&tip=+5&people=4 → Bill empty, 20%, 4 people, aria-invalid false, neutral prompts, the hash rewritten to #tip=20&people=4 (F-4) · console clean · `npm test` 340 of 340 (F-1 timing tests, F-5, F-7, F-9 covered by the lane's tests and the audit) · **result:** pass; QA's AC4 failure closed; the first-pass browser results stand (unchanged behaviour) · **who:** orchestrator
+
+## [2026-10-16T07:29Z] SCRIPT qa-sweep (completion gate, phase 7b)
+- **args file:** qa/sweep.args.json · **runId:** wf_58536bc1-dfe (task w4qhph222) · **script:** qa/sweep.workflow.js (qa-sweep's full sweep adapted to a static SPA, D-002 C) · **served:** the production bundle of e9b9e6d by vite preview at 127.0.0.1:4182 (launch entry tip-calculator-preview)
+- **why:** the FULL row's completion gate: three testers (static bundle and serving, data and privacy, code review), two refuters per finding, a completeness critic; every agent sets a model
+- **models:** testers static-spa sonnet, data-privacy sonnet, code-review opus · refuters sonnet · critic sonnet
+
+## [2026-10-16T07:29Z] SPAWN release-engineer
+- **why:** the FULL row's clean-clone CI-parity build (qa-sweep step 6) and release readiness, Phase A only: READY with the exact commands; nothing is published before the owner's yes
+- **model:** haiku (agent file, effort low) → resolved model in the result line
+- **brief:** briefs/release-engineer.md (release commit e9b9e6df9b58fd0a12899e4632581def99c4d7d7, scaffold 51c789d)
+- **inputs:** tech-plan.md § Release Verification and the deploy notes, web-ship-check § After Deploy, qa-sweep step 6, machine-windows.md, test-report.md, review-findings.md, STATE.md
+
+## [2026-10-16T07:36Z] SPAWN release-engineer (result, Phase A, first pass)
+- **status:** partial, verdict NOT READY · **model:** haiku → claude-haiku-5-5 (26 turns, 236 output tokens, 843k cache-read; 1.9 min; 12 tool uses)
+- **output:** release-note.md (clean clone in the scratchpad: npm ci 0; npm test 1 before the build, 3 failures in src/qa/static.qa.test.ts, which reads the git-ignored dist/; npm run build 0 with the stamp equal to the release SHA, relative assets, hashes identical to the working copy's SHA-stamped build; npm test after the build 1, the stamp assertion expected "local"; npm run size 0: 248,343 bytes raw, 77,871 gzip; secret-scan --history clean; ls-files clean; the gh token carries the workflow scope; the working copy showed only record files modified) · **nothing irreversible ran**
+- **post-return check:** release-note.md exists with the verdict, the clean-clone table, the Phase B commands and the rollback; the claims match the brief · **finding routed:** D-008 (fixed by the orchestrator as a test-only glue edit); the Release Engineer is re-spawned on the fixed commit
+- **gotcha:** the static QA suite read dist/ and deploy.yml runs npm test before npm run build, so the test-report's exit 0 was a working-copy-only result

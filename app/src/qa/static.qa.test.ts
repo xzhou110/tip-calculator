@@ -57,12 +57,30 @@ describe('runtime rules in code (static)', () => {
   });
 });
 
-describe('built page and deploy pre-checks (static)', () => {
-  const dist = existsSync(new URL('dist/index.html', root)) ? read('dist/index.html') : '';
-  it('source index.html has the placeholder; dist has the local stamp, title and theme script before the bundle', () => {
+describe('source and workflow pre-checks (static, no build needed)', () => {
+  it('source index.html has the build-commit placeholder', () => {
     expect(read('index.html')).toContain('<meta name="build-commit" content="__BUILD_COMMIT__" />');
+  });
+  it('workflow: push to main, tests before build, Pages artifact from app/dist, least permissions, no secrets', () => {
+    const wf = readFileSync(new URL('../.github/workflows/deploy.yml', root), 'utf8');
+    expect(wf).toMatch(/branches:\s*\[main\]/);
+    expect(wf.indexOf('npm test')).toBeGreaterThan(-1);
+    expect(wf.indexOf('npm test')).toBeLessThan(wf.indexOf('npm run build'));
+    expect(wf).toContain('path: app/dist');
+    expect(wf).toContain('actions/deploy-pages@v4');
+    expect(wf).not.toMatch(/secrets\./);
+    expect(wf).toMatch(/contents:\s*read/);
+  });
+});
+
+// dist/ is git-ignored and deploy.yml runs `npm test` before `npm run build`, so on a clean checkout these checks skip;
+// the orchestrator and the release engineer run them after a build. Found by the clean-clone CI-parity build (2026-10-16, D-008).
+const hasDist = existsSync(new URL('dist/index.html', root));
+describe.skipIf(!hasDist)('built page and deploy pre-checks (static, after npm run build)', () => {
+  const dist = hasDist ? read('dist/index.html') : '';
+  it('dist has the stamp (local, or the 40-hex commit from GITHUB_SHA), title and theme script before the bundle', () => {
     expect(dist).toContain('<title>Tip Calculator</title>');
-    expect(dist).toContain('<meta name="build-commit" content="local" />');
+    expect(dist).toMatch(/<meta name="build-commit" content="(?:local|[0-9a-f]{40})" \/>/);
     expect(dist).toContain('tip-calculator.theme.v1');
     expect(dist).toContain('prefers-color-scheme: dark');
     expect(dist.indexOf('tip-calculator.theme.v1')).toBeLessThan(dist.indexOf('./assets/'));
@@ -85,15 +103,5 @@ describe('built page and deploy pre-checks (static)', () => {
         expect(allowed.some((a) => a.test(m[0])), `unexpected URL ${m[0]} in ${f}`).toBe(true);
       }
     }
-  });
-  it('workflow: push to main, tests before build, Pages artifact from app/dist, least permissions, no secrets', () => {
-    const wf = readFileSync(new URL('../.github/workflows/deploy.yml', root), 'utf8');
-    expect(wf).toMatch(/branches:\s*\[main\]/);
-    expect(wf.indexOf('npm test')).toBeGreaterThan(-1);
-    expect(wf.indexOf('npm test')).toBeLessThan(wf.indexOf('npm run build'));
-    expect(wf).toContain('path: app/dist');
-    expect(wf).toContain('actions/deploy-pages@v4');
-    expect(wf).not.toMatch(/secrets\./);
-    expect(wf).toMatch(/contents:\s*read/);
   });
 });

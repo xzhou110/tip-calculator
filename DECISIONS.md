@@ -83,3 +83,13 @@ ADR-style record of every non-obvious decision: scope cuts, stack choices, trade
 - **decided by:** orchestrator
 - **reversible:** yes
 - **date:** 2026-10-16
+
+## D-008 QA's static suite read the git-ignored dist/ and hard-coded the local stamp; CI would have failed before deploying
+- **decision:** the orchestrator restructured `app/src/qa/static.qa.test.ts` (a test-only glue edit in QA's lane, logged here): the source and workflow checks always run; the checks that read `app/dist` live under `describe.skipIf(!hasDist)` and accept the stamp as `local` or a 40-hex commit (what `GITHUB_SHA` writes); nothing else changed
+- **context:** the Release Engineer's clean-clone CI-parity build (qa-sweep step 6) ran the workflow's steps in order: `npm ci` 0, `npm test` 1 (3 failures in static.qa.test.ts: no dist on a clean checkout), `npm run build` 0, `npm test` after a SHA-stamped build 1 (the stamp assertion expected "local"). The test-report's "exit 0" had been a working-copy-only result, because the working copy always has dist/
+- **alternatives considered:** moving the dist checks to a separate npm script outside `npm test` (then nothing in CI would guard the built page; the skip keeps them where a post-build run picks them up); re-spawning QA for the fix (an agent run for a six-line test change)
+- **rationale:** exactly the lesson qa-sweep's step 6 was written for; the fix keeps every check and makes its precondition explicit
+- **learning to place:** the QA role brief should say that tests must pass on a clean checkout before any build, because CI runs `npm test` first (plugin agents/qa-tester.md, v0.3.3) and a Lessons line in the playbook
+- **decided by:** orchestrator
+- **reversible:** yes
+- **date:** 2026-10-16

@@ -5,7 +5,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 ---
 
 - **Product:** Tip Calculator, a single-page tip and bill splitter for a dinner group (XuSeak), deployed free on GitHub Pages
-- **Phase:** QA+Review, fix round (one frontend fix lane through build-verify; QA and review done)
+- **Phase:** Completion gate (the adapted full sweep and the release engineer's clean-clone build, in parallel)
 - **Last updated:** 2026-10-16T05:38Z
 
 ## Done
@@ -25,7 +25,7 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - [ ] deployed  (approval: asked at the deploy gate; first publication, new public repo, new Pages site)
 
 ## In progress
-- build-verify.workflow.js fix round: frontend-engineer (opus) → the nine fixes of D-007; then the sonnet auditor
+- qa/sweep.workflow.js (3 testers, refuters, critic) and the release-engineer (haiku, Phase A) in parallel; release candidate e9b9e6d
 
 ## Blocked / open questions
 - none now; the deploy gate needs the owner's own yes later
@@ -51,7 +51,8 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - **scaffold SHA:** 51c789d9523e5f4f043b1e8510f9ce59063543a1 (the lane-diff baseline and the rollback point)
 - **workflow runs:** plan.workflow.js · wf_75859edd-2e0 · briefs/plan.args.json · completed 48.1 min, both artifacts written, checks ok:false on wording, PM resolved (D-006)
 - **workflow runs:** build-verify.workflow.js · wf_4bde4caf-14b · briefs/build-verify.args.json · running (started 2026-10-16T06:37Z)
-- **workflow runs:** build-verify.workflow.js (fix round) · wf_0cc3835a-eb8 · briefs/build-verify-fix.args.json · running
+- **workflow runs:** build-verify.workflow.js (fix round) · wf_0cc3835a-eb8 · briefs/build-verify-fix.args.json · completed 6.3 min, all nine fixes landed, audit passes
+- **workflow runs:** qa/sweep.workflow.js · wf_58536bc1-dfe · qa/sweep.args.json · running
 
 ## Next
 - when plan.workflow.js returns: read tech-plan.md (Shared foundation to scaffold, lanes, High-risk surfaces, Spike result) and api-contract.md; freeze the contract; scaffold; install; commit the scaffold; record its SHA; write briefs/frontend-engineer.md (and a second lane brief only if named), briefs/qa-tester.md, briefs/reviewer.md; run build-verify.workflow.js
