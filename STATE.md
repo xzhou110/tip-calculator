@@ -51,10 +51,10 @@ Live snapshot of where the build is. The orchestrator keeps this current: overwr
 - **quota readout before the deploy gate:** 5-hour 16% · weekly all models 35% · weekly Fable 66% · context 603k (2026-10-16T08:01Z)
 - **scaffold SHA:** 51c789d9523e5f4f043b1e8510f9ce59063543a1 (the lane-diff baseline and the rollback point)
 - **release candidate:** bd173070eb0f18413ea6920cda7d6bb06295dfae (after D-008)
-- **workflow runs:** plan.workflow.js · wf_75859edd-2e0 · briefs/plan.args.json · completed 48.1 min, both artifacts written, checks ok:false on wording, PM resolved (D-006)
-- **workflow runs:** build-verify.workflow.js · wf_4bde4caf-14b · briefs/build-verify.args.json · running (started 2026-10-16T06:37Z)
-- **workflow runs:** build-verify.workflow.js (fix round) · wf_0cc3835a-eb8 · briefs/build-verify-fix.args.json · completed 6.3 min, all nine fixes landed, audit passes
-- **workflow runs:** qa/sweep.workflow.js · wf_58536bc1-dfe · qa/sweep.args.json · completed 25.4 min, 16 agents, 0 confirmed
+- **workflow runs:** plan.workflow.js · plan run 1 · briefs/plan.args.json · completed 48.1 min, both artifacts written, checks ok:false on wording, PM resolved (D-006)
+- **workflow runs:** build-verify.workflow.js · build-verify run 1 · briefs/build-verify.args.json · running (started 2026-10-16T06:37Z)
+- **workflow runs:** build-verify.workflow.js (fix round) · build-verify run 2 (the fix round) · briefs/build-verify-fix.args.json · completed 6.3 min, all nine fixes landed, audit passes
+- **workflow runs:** qa/sweep.workflow.js · sweep run 1 · qa/sweep.args.json · completed 25.4 min, 16 agents, 0 confirmed
 
 ## Next
 - when plan.workflow.js returns: read tech-plan.md (Shared foundation to scaffold, lanes, High-risk surfaces, Spike result) and api-contract.md; freeze the contract; scaffold; install; commit the scaffold; record its SHA; write briefs/frontend-engineer.md (and a second lane brief only if named), briefs/qa-tester.md, briefs/reviewer.md; run build-verify.workflow.js

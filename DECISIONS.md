@@ -93,3 +93,11 @@ ADR-style record of every non-obvious decision: scope cuts, stack choices, trade
 - **decided by:** orchestrator
 - **reversible:** yes
 - **date:** 2026-10-16
+
+## D-009 The records go public without local machine paths or session ids
+- **decision:** before the first publication the orchestrator stripped `C:/Users/<account>` paths, the Claude session id, the Workflow task ids and the run ids from the tracked record files (RUN_LOG, STATE, the release brief and note, the sweep script); run ids became stable labels ("plan run 1", "build-verify run 1", "build-verify run 2 (the fix round)", "sweep run 1"); the hooks path reads `~/.claude/git-hooks`; the workspace paths `D:/Meaningful/AI/...` stay, as in the sibling repositories' public records
+- **context:** the completion sweep's privacy tester flagged 16 tracked files with local paths and ids; the owner's answer at the deploy gate: "Strip the local paths and session or workflow ids from the record files, then publish"
+- **alternatives considered:** publish as is (the method record would have carried a Windows account name and ids that mean nothing outside this machine)
+- **decided by:** human (the owner's words, forwarded by the session that started this one)
+- **reversible:** yes
+- **date:** 2026-10-16

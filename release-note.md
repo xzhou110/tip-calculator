@@ -36,7 +36,7 @@ Clone: `<scratchpad>/tip-calculator-ci` (outside the project, cloned from the lo
 
 ## Pre-Publication Scans (Read-Only)
 
-- `node C:/Users/xzhou/.claude/git-hooks/secret-scan.mjs --history`: exit 0, `secret-scan: clean (the whole history)`.
+- `node ~/.claude/git-hooks/secret-scan.mjs --history`: exit 0, `secret-scan: clean (the whole history)`.
 - `git ls-files`: 63 files. No `node_modules`, `dist`, `.env`, binaries or private-named files. Tracked `app/package-lock.json` only.
 - `git status --porcelain` (observed, not blocking): ` M RUN_LOG.md`, ` M STATE.md`, ` M briefs/release-engineer.md`. These are the orchestrator's record files and are not part of the release commit. `git push` sends commits only, so they do not ship. This note (`release-note.md`) is also a modified tracked file after this write.
 - Ignored and untouched: `app/dist/` and `app/node_modules/` in the working copy (git-ignored build output; no install was run in the working copy).
